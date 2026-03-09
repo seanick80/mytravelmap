@@ -138,7 +138,7 @@ export default function TravelMap({ locations }: TravelMapProps) {
       center={center}
       zoom={3}
       worldCopyJump
-      style={{ height: "100vh", width: "100%" }}
+      style={{ flex: 1, width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

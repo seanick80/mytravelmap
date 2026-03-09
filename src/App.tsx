@@ -3,7 +3,7 @@ import locations from "./data/locations";
 
 export default function App() {
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <header
         style={{
           padding: "12px 20px",
