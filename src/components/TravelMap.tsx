@@ -45,19 +45,36 @@ function buildPath(sorted: Location[]): [number, number][] {
 }
 
 /**
- * Shift all coordinates so they are centered around the map's current
- * center longitude. This ensures pins and polyline stay visible as the
- * user pans across world copies.
+ * Shift the path so it stays visible in the current view. The first point
+ * is snapped to the nearest copy of the map center, then each subsequent
+ * point is kept within 180° of the previous one. This keeps the entire
+ * chain together on one world copy instead of splitting across two.
  */
 function shiftToView(
   path: [number, number][],
   centerLng: number
 ): [number, number][] {
-  return path.map(([lat, lng]) => {
-    while (lng < centerLng - 180) lng += 360;
-    while (lng > centerLng + 180) lng -= 360;
-    return [lat, lng];
-  });
+  if (path.length === 0) return [];
+  let [lat0, lng0] = path[0];
+  while (lng0 < centerLng - 180) lng0 += 360;
+  while (lng0 > centerLng + 180) lng0 -= 360;
+
+  const result: [number, number][] = [[lat0, lng0]];
+  let prevLng = lng0;
+
+  for (let i = 1; i < path.length; i++) {
+    let lng = path[i][1];
+    const diff = lng - prevLng;
+    // Keep within 180° of previous point to preserve the chain
+    if (diff > 180) lng -= 360;
+    else if (diff < -180) lng += 360;
+    // If still far, do another pass (e.g., crossing from -400 range)
+    while (lng < prevLng - 180) lng += 360;
+    while (lng > prevLng + 180) lng -= 360;
+    result.push([path[i][0], lng]);
+    prevLng = lng;
+  }
+  return result;
 }
 
 function MapContent({ sorted }: { sorted: Location[] }) {
