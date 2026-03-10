@@ -197,7 +197,7 @@ const locations: Location[] = [
   {
     name: "St. Malo, France",
     lat: 48.6492,
-    lng: 2.0184,
+    lng: -1.9890,
     date: "2025-08-17",
     description: "August in Paris and Quincy-Voisins",
     blogUrl: "https://www.ouryearofwander.com/post/france",
